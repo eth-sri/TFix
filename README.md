@@ -2,6 +2,12 @@
 
 TFix is a state-of-the-art system for automatically fixing coding errors in programs. The key idea behind TFix is to leverage a large text-to-text Transformer pre-trained on natural languages. This design allows TFix to apply a knowledge transfer between natural and programming languages. In addition to that, TFix is fine-tuned jointly on 52 different error types, which allows it to learn typical patterns across various error types together.
 
+## Paper
+
+The paper can be found under [this](https://www.semanticscholar.org/paper/TFix%3A-Learning-to-Fix-Coding-Errors-with-a-Berabi-He/0505f17c4052366cbc4fad99150d3542edf85faa) and 
+[this link](https://files.sri.inf.ethz.ch/website/papers/icml21-tfix.pdf). 
+
+
 ## Setup
 
 To use TFix, you need Python 3. First create a virtual environment and install the dependencies:
