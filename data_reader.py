@@ -27,18 +27,18 @@ class LinterReport:
 class DataPoint: 
     def __init__(self, source_code, target_code, warning_line, linter_report, instructions, source_file, target_file, repo, source_filename, target_filename, source_changeid, target_changeid):
 
-        self.source_code = source_code # string
-        self.target_code = target_code # string
-        self.warning_line = warning_line # string
-        self.linter_report = linter_report # class LinterReport
-        self.instructions = instructions # list of class Instruction
-        self.source_file = source_file # string
-        self.target_file = target_file # string
+        self.source_code = source_code
+        self.target_code = target_code
+        self.warning_line = warning_line
+        self.linter_report = linter_report
+        self.instructions = instructions
+        self.source_file = source_file 
+        self.target_file = target_file
         self.repo = repo
-        self.source_filename = source_filename # string
-        self.target_filename = target_filename # string
-        self.source_changeid = source_changeid # string
-        self.target_changeid = target_changeid # string
+        self.source_filename = source_filename 
+        self.target_filename = target_filename 
+        self.source_changeid = source_changeid 
+        self.target_changeid = target_changeid
 
     def GetDescription(self):
         desc = "WARNING\n" + self.linter_report.rule_id + " " + self.linter_report.message + " at line: " + str(self.linter_report.line_begin) + "\n"
