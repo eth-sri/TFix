@@ -1,3 +1,5 @@
+import json
+
 class Instruction:
     def __init__(self, inst_type, text, line_number, line_column, global_idx, description, relativ_pos):
         self.type = inst_type
@@ -58,8 +60,6 @@ class DataPoint:
         return inputs, outputs 
 
         
-
-import json
 def GetDataAsPython(data_json_path):
     with open(data_json_path, 'r', errors='ignore') as f:
         data_json = json.load(f)
