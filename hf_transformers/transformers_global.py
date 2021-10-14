@@ -1,18 +1,24 @@
-import torch
-import numpy as np
+from collections import defaultdict
+from datetime import datetime
 import argparse
+import json
 import os
 import sys
-import json
 sys.path.append('..')
-from transformers import T5ForConditionalGeneration, Trainer, TrainingArguments, T5Tokenizer, T5Config
+
+from transformers import Seq2SeqTrainer
+from transformers import Seq2SeqTrainingArguments
+from transformers import T5Config
+from transformers import T5ForConditionalGeneration
+from transformers import T5Tokenizer
+import numpy as np
+import torch
+
 from data_reader import GetDataAsPython
-from prepare_data import create_data, create_dataset, extract_warning_types, compute_test_results, filter_rule, compute_ref_match
-from datetime import datetime
-from collections import defaultdict
-from transformers import Seq2SeqTrainer, Seq2SeqTrainingArguments
-import transformers
-from tqdm import tqdm
+from prepare_data import create_data
+from prepare_data import create_dataset
+from prepare_data import extract_warning_types
+from prepare_data import filter_rule 
 
 now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
