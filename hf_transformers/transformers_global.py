@@ -124,10 +124,8 @@ training_args = Seq2SeqTrainingArguments(
         greater_is_better=False,
         save_total_limit=args.epochs if args.save_total_limit == -1 else args.save_total_limit,
         eval_accumulation_steps=args.eval_acc_steps, # set this lower, if testing or validation crashes
-        # disable_tqdm=True if args.load_model != '' else False,
         disable_tqdm=False,
         predict_with_generate=True, # never set this to false, it is for testing.
-        # lr_scheduler_type="polynomial",
     )
 trainer = Seq2SeqTrainer(
     model=model,
@@ -187,11 +185,6 @@ if args.load_model != '':
         infos = test_info[warning]
         for i, code in enumerate(inputs):
             assert code == infos[i].GetT5Representation(True)[0], "something wrong! stop it!"
-
-    # sorted_warning_types = all_warning_types[:]
-    # sorted_warning_types = list(sorted(sorted_warning_types, key=lambda w: len(test_inputs[w]), reverse=True))
-    # for w in sorted_warning_types:
-    #     print(w, len(test_inputs[w]))
 
     # Testing
     scores = defaultdict(float)
@@ -257,56 +250,3 @@ else:
 now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
 print("end time:", current_time)
-
-# no-undef 21039
-# no-unused-vars 20015
-# no-empty 14430
-# no-unreachable 11915
-# no-cond-assign 11329
-# no-invalid-this 11225
-# no-redeclare 10564
-# no-console 10405
-# no-process-exit 9945
-# no-extra-semi 9243
-# comma-style 8010
-# no-useless-escape 7776
-# guard-for-in 7652
-# prefer-rest-params 7533
-# no-constant-condition 5735
-# no-dupe-keys 5727
-# no-case-declarations 5502
-# no-array-constructor 5478
-# no-throw-literal 5111
-# generator-star-spacing 5083
-# prefer-spread 4993
-# no-fallthrough 4858
-# no-extra-boolean-cast 4766
-# no-extend-native 4227
-# no-inner-declarations 3416
-# no-debugger 3387
-# no-extra-bind 3361
-# no-func-assign 3260
-# no-self-assign 2394
-# no-new-object 1613
-# no-this-before-super 1512
-# require-yield 1426
-# no-caller 1296
-# no-const-assign 1227
-# no-unsafe-finally 1171
-# no-new-wrappers 961
-# no-sparse-arrays 751
-# no-global-assign 714
-# getter-return 681
-# no-unsafe-negation 602
-# valid-typeof 474
-# no-dupe-class-members 415
-# constructor-super 397
-# no-duplicate-case 303
-# no-unused-labels 273
-# no-empty-pattern 239
-# no-class-assign 235
-# no-ex-assign 143
-# use-isnan 142
-# no-compare-neg-zero 59
-# for-direction 36
-# no-new-symbol 5
