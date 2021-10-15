@@ -12,6 +12,7 @@ from transformers import Seq2SeqTrainer
 from transformers import Seq2SeqTrainingArguments
 from transformers import T5ForConditionalGeneration
 from transformers import T5Tokenizer
+from transformers import set_seed
 import numpy as np
 import torch
 
@@ -25,14 +26,11 @@ from utils import compute_dict_average
 from utils import get_current_time
 
 # transformers.logging.set_verbosity_info()
+set_seed(42)
 print("start time: ", get_current_time())
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-e", "--epochs", type=int, default=1)
 parser.add_argument("-bs", "--batch-size", type=int, default=1)
-parser.add_argument("-lr", "--learning-rate", type=float, default=1e-4)
-parser.add_argument("-gcv", "--gradient-clip-val", type=float, default=0.0)
-parser.add_argument("-wd", "--weight-decay", type=float, default=0)
 parser.add_argument(
     "-mn",
     "--model-name",
@@ -49,11 +47,9 @@ parser.add_argument(
 parser.add_argument("-eas", "--eval-acc-steps", type=int, default=1)
 parser.add_argument("-md", "--model-dir", type=str, default="")
 parser.add_argument("-et", "--error-type", type=str, default="")
-parser.add_argument("-stl", "--save-total-limit", type=int, default=-1)
-parser.add_argument("-pt", "--pre-trained", type=boolean_string, default=True)
 args = parser.parse_args()
 
-# Create model directory
+# Create job's directory
 model_name = args.model_name
 if args.model_dir != "":
     model_directory = args.model_dir
@@ -90,10 +86,8 @@ print(all_warning_types)
 # Load the tokenizer and the model that will be tested.
 tokenizer = T5Tokenizer.from_pretrained(args.load_model)
 print("Loaded tokenizer from directory {}".format(args.load_model))
-
 model = T5ForConditionalGeneration.from_pretrained(args.load_model)
 print("Loaded model from directory {}".format(args.load_model))
-# model.parallelize()
 model.to(f"cuda:{torch.cuda.current_device()}")
 model.resize_token_embeddings(len(tokenizer))
 model.eval()
@@ -103,7 +97,10 @@ train_dataset = create_dataset(
     train_inputs, train_labels, tokenizer, pad_truncate=True, max_length=128
 )
 val_dataset = create_dataset(val_inputs, val_labels, tokenizer, pad_truncate=True)
-# Training args (required by both training and test)
+
+# Trainer arguments.
+# Note that Seq2SeqTrainer class has a method predict() that will be used to generate predictions.
+# That is why we still need to create a trainer instance and its arguments even though we are in testing
 training_args = Seq2SeqTrainingArguments(
     output_dir=model_directory,
     num_train_epochs=0,
@@ -114,6 +111,7 @@ training_args = Seq2SeqTrainingArguments(
     evaluation_strategy="epoch",
     eval_accumulation_steps=args.eval_acc_steps,  # set this lower, if testing or validation crashes
     predict_with_generate=True,  # never set this to false, it is for testing.
+    seed=42,  # default value
 )
 
 trainer = Seq2SeqTrainer(
@@ -125,8 +123,9 @@ trainer = Seq2SeqTrainer(
     tokenizer=tokenizer,
 )
 
-print("Testing...")
+print("Testing has started")
 if args.eval_all:
+    # add random_test samples to the testing data
     counter = 0
     for key in test_inputs:
         counter += len(test_inputs[key])
@@ -172,7 +171,7 @@ if args.eval_all:
 counter = 0
 for key in test_inputs:
     counter += len(test_inputs[key])
-print("number of testing samples: ", counter)
+print("Number of testing samples: ", counter)
 
 # test that the samples are well aligned among inputs and info
 for warning in test_inputs:
@@ -181,7 +180,7 @@ for warning in test_inputs:
     for i, code in enumerate(inputs):
         assert code == infos[i].GetT5Representation(True)[0], "something wrong! stop it!"
 
-# Testing
+# Generate predictions
 scores: DefaultDict[str, float] = defaultdict(float)
 for i, warning in enumerate(all_warning_types):
     test_warning = test_inputs[warning]
@@ -198,7 +197,7 @@ for i, warning in enumerate(all_warning_types):
         pad_truncate=True,
         max_length=target_max_length,
     )
-    # here use model.generate with batches
+
     target_ids = tokenizer(
         test_warning_labels,
         return_tensors="pt",
