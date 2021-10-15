@@ -77,9 +77,9 @@ def create_data(
     test_labels: DefaultDict[str, List[str]] = defaultdict(list)
     n_test_samples = 0
 
-    train_info: List[str] = []
-    val_info: List[str] = []
-    test_info: DefaultDict[str, List[str]] = defaultdict(list)
+    train_info: List[DataPoint] = []
+    val_info: List[DataPoint] = []
+    test_info: DefaultDict[str, List[DataPoint]] = defaultdict(list)
 
     for warning in linter_warnings:
         filtered_data = filter_rule(data, warning)
