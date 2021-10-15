@@ -52,7 +52,6 @@ parser.add_argument(
 parser.add_argument(
     "-ea", "--eval-all", type=boolean_string, default=False
 )  # to evaluate on all data or not
-parser.add_argument("-ds", "--dataset-size", type=int, default=0)
 parser.add_argument("-eas", "--eval-acc-steps", type=int, default=1)
 parser.add_argument("-md", "--model-dir", type=str, default="")
 parser.add_argument("-et", "--error-type", type=str, default="")
@@ -183,7 +182,6 @@ if args.load_model != "":
             filtered_data = GetDataAsPython(path)
             print("size of filtered data: ", len(filtered_data))
 
-            # filtered_test, filtered_test_labels = defaultdict(list), defaultdict(list)
             filtered_test: DefaultDict[str, List[str]] = defaultdict(list)
             filtered_test_labels: DefaultDict[str, List[str]] = defaultdict(list)
             filtered_test_info: DefaultDict[str, List[DataPoint]] = defaultdict(list)
@@ -232,54 +230,41 @@ if args.load_model != "":
         test_warning_info = test_info[warning]
         target_max_length = 256  # Set this to 256 if enough memory
 
-        if args.dataset_size == 0:
-            ds_size = len(test_warning)
-        else:
-            ds_size = args.dataset_size
-
-        num_ds_batches = len(test_warning) // ds_size
-        if len(test_warning) % ds_size:
-            num_ds_batches += 1
-
-        print(f"rule {i}: {warning}, # {len(test_warning)}, #num_ds_batches {num_ds_batches}")
+        print(f"rule {i}: {warning}, # {len(test_warning)}")
         correct_counter, total_counter = 0, 0
-        for j in range(num_ds_batches):
-            test_warning_batch = test_warning[j * ds_size : (j + 1) * ds_size]
-            test_warning_labels_batch = test_warning_labels[j * ds_size : (j + 1) * ds_size]
-            test_warning_info_batch = test_warning_info[j * ds_size : (j + 1) * ds_size]
-            test_warning_dataset = create_dataset(
-                test_warning_batch,
-                test_warning_labels_batch,
-                tokenizer,
-                pad_truncate=True,
-                max_length=target_max_length,
-            )
-            # here use model.generate with batches
-            target_ids = tokenizer(
-                test_warning_labels_batch,
-                return_tensors="pt",
-                truncation=True,
-                padding="max_length",
-                max_length=target_max_length,
-            ).input_ids
-            target_ids = np.array(target_ids)
+        test_warning_dataset = create_dataset(
+            test_warning,
+            test_warning_labels,
+            tokenizer,
+            pad_truncate=True,
+            max_length=target_max_length,
+        )
+        # here use model.generate with batches
+        target_ids = tokenizer(
+            test_warning_labels,
+            return_tensors="pt",
+            truncation=True,
+            padding="max_length",
+            max_length=target_max_length,
+        ).input_ids
+        target_ids = np.array(target_ids)
 
-            output_ids = trainer.predict(
-                test_dataset=test_warning_dataset, num_beams=5, max_length=target_max_length
-            ).predictions
-            output_ids = np.pad(
-                output_ids, ((0, 0), (0, target_max_length - output_ids.shape[1])), mode="constant"
-            )
-            output_ids = np.delete(output_ids, 0, axis=1)
-            output_ids = np.insert(output_ids, target_max_length - 1, 0, axis=1)
+        output_ids = trainer.predict(
+            test_dataset=test_warning_dataset, num_beams=5, max_length=target_max_length
+        ).predictions
+        output_ids = np.pad(
+            output_ids, ((0, 0), (0, target_max_length - output_ids.shape[1])), mode="constant"
+        )
+        output_ids = np.delete(output_ids, 0, axis=1)
+        output_ids = np.insert(output_ids, target_max_length - 1, 0, axis=1)
 
-            correct_counter += np.sum(np.all(np.equal(target_ids, output_ids), axis=1))
-            total_counter += len(output_ids)
-            for k, output_id in enumerate(output_ids):
-                pred = tokenizer.decode(output_id, skip_special_tokens=True)
-                predictions = []
-                predictions.append(pred)
-                test_warning_info[j * ds_size + k].predictions = predictions
+        correct_counter += np.sum(np.all(np.equal(target_ids, output_ids), axis=1))
+        total_counter += len(output_ids)
+        for k, output_id in enumerate(output_ids):
+            pred = tokenizer.decode(output_id, skip_special_tokens=True)
+            predictions = []
+            predictions.append(pred)
+            test_warning_info[k] = predictions
 
         scores[warning] = correct_counter / total_counter
         test_info[warning] = test_warning_info
