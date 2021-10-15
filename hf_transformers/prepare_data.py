@@ -1,12 +1,11 @@
 from collections import defaultdict
-from typing import Any, DefaultDict, List
+from typing import Any, DefaultDict, List, Dict
 
 from transformers.tokenization_utils import PreTrainedTokenizer
 
 from sklearn.model_selection import train_test_split
 import torch
 from transformers import BatchEncoding
-from transformers import Dict
 
 from data_reader import DataPoint
 
