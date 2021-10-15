@@ -119,7 +119,6 @@ trainer = Seq2SeqTrainer(
     args=training_args,
     train_dataset=train_dataset,
     eval_dataset=val_dataset,
-    optimizers=[torch.optim.Adam(params=model.parameters(), lr=args.learning_rate), None],
     tokenizer=tokenizer,
 )
 
