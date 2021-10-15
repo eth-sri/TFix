@@ -22,6 +22,7 @@ from prepare_data import create_dataset
 from prepare_data import extract_warning_types
 from prepare_data import filter_rule
 from utils import boolean_string
+from utils import check_test_alignment
 from utils import compute_dict_average
 from utils import get_current_time
 
@@ -201,11 +202,7 @@ if args.load_model != "":
     print("number of testing samples: ", counter)
 
     # test that the samples are well aligned among inputs and info
-    for warning in test_inputs:
-        inputs = test_inputs[warning]
-        infos = test_info[warning]
-        for i, code in enumerate(inputs):
-            assert code == infos[i].GetT5Representation(True)[0], "something wrong! stop it!"
+    check_test_alignment(test_inputs=test_inputs, test_info=test_info)
 
     # Testing
     scores: DefaultDict[str, float] = defaultdict(float)
