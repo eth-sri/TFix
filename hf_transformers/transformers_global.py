@@ -21,17 +21,12 @@ from prepare_data import create_data
 from prepare_data import create_dataset
 from prepare_data import extract_warning_types
 from prepare_data import filter_rule
-
-now = datetime.now()
-current_time = now.strftime("%H:%M:%S")
-print("start time:", current_time)
+from utils import boolean_string
+from utils import compute_dict_average
+from utils import get_current_time
 
 # transformers.logging.set_verbosity_info()
-def boolean_string(s):
-    if s not in {"False", "True"}:
-        raise ValueError("Not a valid boolean string")
-    return s == "True"
-
+print("start time: ", get_current_time())
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-e", "--epochs", type=int, default=1)
@@ -58,16 +53,6 @@ parser.add_argument("-et", "--error-type", type=str, default="")
 parser.add_argument("-stl", "--save-total-limit", type=int, default=-1)
 parser.add_argument("-pt", "--pre-trained", type=boolean_string, default=True)
 args = parser.parse_args()
-
-
-def average_of_dict(dict):
-    total = 0
-    N = 0
-    for key, value in dict.items():
-        total += value
-        N += 1
-    return total / N
-
 
 # Create model directory
 model_name = args.model_name
@@ -269,7 +254,7 @@ if args.load_model != "":
         scores[warning] = correct_counter / total_counter
         test_info[warning] = test_warning_info
         print(f"rule {i} acc: {correct_counter / total_counter}")
-    scores["average"] = average_of_dict(scores)
+    scores["average"] = compute_dict_average(scores)  # average_of_dict(scores)
 
     # create the whole test list
     test_list: List[DataPoint] = []
@@ -288,6 +273,4 @@ else:
     trainer.train()
     trainer.save_model()
 
-now = datetime.now()
-current_time = now.strftime("%H:%M:%S")
-print("end time:", current_time)
+print("end time: ", get_current_time())
