@@ -1,5 +1,7 @@
 from datetime import datetime
-from typing import Dict, Any
+from typing import Dict, List
+
+from data_reader import DataPoint
 
 
 def boolean_string(s: str) -> bool:
@@ -27,7 +29,9 @@ def compute_dict_average(dict: Dict) -> float:
     return total / N
 
 
-def check_test_alignment(test_inputs: Dict[str, str], test_info: Dict[str, Any]) -> None:
+def check_test_alignment(
+    test_inputs: Dict[str, str], test_info: Dict[str, List[DataPoint]]
+) -> None:
     for warning in test_inputs:
         inputs = test_inputs[warning]
         infos = test_info[warning]
