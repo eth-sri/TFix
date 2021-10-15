@@ -21,7 +21,8 @@ from prepare_data import create_data
 from prepare_data import create_dataset
 from prepare_data import extract_warning_types
 from prepare_data import filter_rule
-from utils import boolean_string, check_test_alignment
+from utils import boolean_string
+from utils import check_test_alignment
 from utils import compute_dict_average
 from utils import get_current_time
 

@@ -28,7 +28,6 @@ def compute_dict_average(dict: Dict) -> float:
 
 
 def check_test_alignment(test_inputs: Dict[str, str], test_info: Dict[str, Any]) -> None:
-    # test that the samples are well aligned among inputs and info
     for warning in test_inputs:
         inputs = test_inputs[warning]
         infos = test_info[warning]
