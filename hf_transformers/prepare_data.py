@@ -70,16 +70,16 @@ def create_data(
 ):
     train: List[str] = []
     train_labels: List[str] = []
-    val: List[DataPoint] = []
-    val_labels: List[DataPoint] = []
+    val: List[str] = []
+    val_labels: List[str] = []
 
-    test: DefaultDict[str, List[DataPoint]] = defaultdict(list)
-    test_labels: DefaultDict[str, List[DataPoint]] = defaultdict(list)
+    test: DefaultDict[str, List[str]] = defaultdict(list)
+    test_labels: DefaultDict[str, List[str]] = defaultdict(list)
     n_test_samples = 0
 
-    train_info: List[DataPoint] = []
-    val_info: List[DataPoint] = []
-    test_info: DefaultDict[str, List[DataPoint]] = defaultdict(list)
+    train_info: List[str] = []
+    val_info: List[str] = []
+    test_info: DefaultDict[str, List[str]] = defaultdict(list)
 
     for warning in linter_warnings:
         filtered_data = filter_rule(data, warning)
