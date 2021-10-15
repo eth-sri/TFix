@@ -249,7 +249,7 @@ if args.load_model != "":
             pred = tokenizer.decode(output_id, skip_special_tokens=True)
             predictions = []
             predictions.append(pred)
-            test_warning_info[k] = predictions
+            test_warning_info[k].predictions = predictions
 
         scores[warning] = correct_counter / total_counter
         test_info[warning] = test_warning_info
@@ -260,6 +260,7 @@ if args.load_model != "":
     test_list: List[DataPoint] = []
     for key in test_info:
         test_list += test_info[key]
+
     with open(os.path.join(model_directory, "test_data.json"), "w") as outfile:
         json.dump(
             [datapoint.__dict__ for datapoint in test_list], outfile, default=lambda o: o.__dict__
