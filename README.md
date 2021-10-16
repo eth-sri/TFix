@@ -2,10 +2,14 @@
 
 TFix is a state-of-the-art system for automatically fixing coding errors in programs. The key idea behind TFix is to leverage a large text-to-text Transformer pre-trained on natural languages. This design allows TFix to apply a knowledge transfer between natural and programming languages. In addition to that, TFix is fine-tuned jointly on 52 different error types, which allows it to learn typical patterns across various error types together.
 
+<br/>
+
 ## Paper
 
 The paper can be found under [this](https://www.semanticscholar.org/paper/TFix%3A-Learning-to-Fix-Coding-Errors-with-a-Berabi-He/0505f17c4052366cbc4fad99150d3542edf85faa) and
 [this link](https://files.sri.inf.ethz.ch/website/papers/icml21-tfix.pdf).
+
+<br/>
 
 ## Setup
 
@@ -19,9 +23,13 @@ pip install -r requirements.txt
 
 Note that you may need to install `torch`, `torchvision` and `torchtext` according to your GPU and CUDA version.
 
+<br/>
+
 ## Dataset and Models
 
 The dataset and trained models used in our experiments are available under [this link](https://drive.google.com/file/d/1CtfnYaVf-q6FZP5CUM4Wh7ofpp8b9ajW/view?usp=sharing). Download and unzip them into the same directory as the code. We used the model named `t5large` for TFix.
+
+<br/>
 
 ## Configuration
 
@@ -50,7 +58,11 @@ Optional arguments:
 | -stl --save-total-limit  |   -1    | Maximum number of checkpoints to save                                |
 | -pt --pre-trained        |  True   | Whether to use the pre-training model or not                         |
 
+<br/>
+<br/>
+
 The `tfix_testing.py` has the following arguments:
+Required arguments:
 
 ```
  -lm --load-model   Path to the model's checkpoint that will be tested.
@@ -98,6 +110,8 @@ This parameter specifies the error type when fine-tuning or testing per error ty
 
 Either you can train T5 from scratch, or you can fine-tune it. Setting the flag -pt to true uses pre-trained model.
 
+<br/>
+
 ## An example for testing
 
 ```
@@ -114,9 +128,13 @@ python tfix_training.py -e 30 -bs 32 -mn t5-large -md t5large_new
 
 You can use the `CUDA_VISIBLE_DEVICES` flag to control the GPUs used for fine-tuning or testing.
 
+<br/>
+
 ## Reproducing the experiment results
 
 We provide scripts to obtain the exact match accuracy in our experiments. Obtaining the error removal accuracy involves other complex logics (e.g., calling ESLint) which we plan to release in the future.
+
+<br/>
 
 ### Experiment: Model Size
 
@@ -136,6 +154,8 @@ python tfix_training.py -e 30 -bs 32 -mn t5-base -md t5base_new
 python tfix_training.py -e 30 -bs 32 -mn t5-small -md t5small_new
 ```
 
+<br/>
+
 ### Experiment: No Pre-training
 
 Obtaining testing results with the provided trained model:
@@ -149,6 +169,8 @@ You can also train the model by yourself:
 ```
 python tfix_training.py -e 30 -bs 32 -mn t5-large -md t5large-no-pretrain_new -pt False
 ```
+
+<br/>
 
 ### Experiment: Fine-tuning per error type
 
