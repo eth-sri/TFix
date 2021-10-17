@@ -29,6 +29,23 @@ Note that you may need to install `torch`, `torchvision` and `torchtext` accordi
 
 The dataset and trained models used in our experiments are available under [this link](https://drive.google.com/file/d/1CtfnYaVf-q6FZP5CUM4Wh7ofpp8b9ajW/view?usp=sharing). Download and unzip them into the same directory as the code. We used the model named `t5large` for TFix.
 
+The dataset contains a metadata for each data point (buggy-fixed code pair). The metadata is described in the table below.
+
+| Fields          | Description                                                                                                                                            |
+| :-------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| source_code     | The code patch around the error that is fed to the model.                                                                                              |
+| target_code     | The corresponding fixed version of the buggy patch. It is fed to the model as target output.                                                           |
+| repo            | The repository from which the sample was extracted. Ignore the local path `/data/all/data`                                                             |
+| source_changeid | The commit id of the file with the bug                                                                                                                 |
+| target_changeid | The commit id of the file with the fix                                                                                                                 |
+| source_filename | The name of the file with the bug                                                                                                                      |
+| target_filename | The name of the file with the fix                                                                                                                      |
+| source_file     | It contains a larger patch around the bug that was used for debugging purposes. The name is misleasind since it does not contain the whole file.       |
+| target_file     | It contains a larger patch around the fix that was used for debugging purposes. The name is misleasind since it does not contain the whole file.       |
+| linter_report   | Contains the information reported by detector. It hals its own sub-fields like `rule_id` (error type) `message` (error message), `line_begin` and more |
+| warning_line    | The line of code on which the errror was reported by the detector.                                                                                     |
+| instructions    | It contains a list of text edit operation that explains the diff between `source_code` and `target_code`                                               |
+
 <br/>
 
 ## Configuration
