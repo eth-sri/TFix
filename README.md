@@ -9,6 +9,19 @@ TFix is a state-of-the-art system for automatically fixing coding errors in prog
 The paper can be found under [this](https://www.semanticscholar.org/paper/TFix%3A-Learning-to-Fix-Coding-Errors-with-a-Berabi-He/0505f17c4052366cbc4fad99150d3542edf85faa) and
 [this link](https://files.sri.inf.ethz.ch/website/papers/icml21-tfix.pdf).
 
+If you find our paper useful, please cite:
+
+```
+@inproceedings{Berabi2021TFixLT,
+  title={TFix: Learning to Fix Coding Errors with a Text-to-Text Transformer},
+  author={Berkay Berabi and Jingxuan He and Veselin Raychev and Martin T. Vechev},
+  booktitle={ICML},
+  year={2021}
+}
+```
+
+Citation for other formats like `Endnote`, `APA` and a more detailed `BibTeX` citation can be found [here](https://proceedings.mlr.press/v139/berabi21a.html) at the very bottom.
+
 <br/>
 
 ## Setup
