@@ -38,6 +38,43 @@ Note that you may need to install `torch`, `torchvision` and `torchtext` accordi
 
 <br/>
 
+## Linters Setup
+
+We provide our configuration and javascript files to run the ESLint with TFix's configuration and versions. Please note that it is crucial to have the same setup as otherwise the reported bugs can differ with varying configurations and versions.
+
+### ESLint with default config.
+```shell
+cd linters/javascript/eslint_eslint
+npm ci
+npx webpack
+```
+### Eslint with "repo_specific" config
+```shell
+cd linters/javascript/eslint_repo_specific/
+npm ci
+npx webpack
+```
+
+From now, you should be able to run linters with both configuration. There are two options to run them. You can either directly provide a path to the file or you can provide a line containign a json line with certain fields. The latter can be more useful when you want to run it programatically on many files by using pipes.  Please see the example commands below for more information.
+
+```shell
+// running eslint with default config on a file. The commands are the same for the repo_specific config. Just switch the directory accordingly.
+cd linters/javascript/eslint_eslint
+```
+
+Option 1: Provide a path to the file you want to lint.
+```shell
+node src/index.js my_file_for_linting.js
+```
+
+Option 2: Provide a json as input. When you use this option, the running code will wait for an input from the standard input. So, the code hangs until you provide the input. The code expectsa single line that is a json line.
+
+```shell
+node src/index.js -- - JSON
+// now provide a json like wit h the following format.
+[{"code":"var x = 5;\nvar y = 11;\n","file_name":"some/folder/some_file.js"}]
+```
+
 ## Dataset and Models
 
 The dataset and trained models used in our experiments are available under [this link](https://drive.google.com/file/d/1CtfnYaVf-q6FZP5CUM4Wh7ofpp8b9ajW/view?usp=sharing). Download and unzip them into the same directory as the code. We used the model named `t5large` for TFix.
