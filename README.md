@@ -42,13 +42,14 @@ Note that you may need to install `torch`, `torchvision` and `torchtext` accordi
 
 We provide our configuration and javascript files to run the ESLint with TFix's configuration and versions. Please note that it is crucial to have the same setup as otherwise the reported bugs can differ with varying configurations and versions.
 
-### ESLint with default config.
+### ESLint with default config
 ```shell
 cd linters/javascript/eslint_eslint
 npm ci
 npx webpack
 ```
-### Eslint with "repo_specific" config
+
+### ESLint with repo specific config
 ```shell
 cd linters/javascript/eslint_repo_specific/
 npm ci
